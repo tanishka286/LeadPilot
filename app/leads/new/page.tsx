@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function AddLeadPage() {
   const router = useRouter();
@@ -9,7 +10,6 @@ export default function AddLeadPage() {
   const [error, setError] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Form State Values
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [status, setStatus] = useState("NEW");
@@ -19,7 +19,6 @@ export default function AddLeadPage() {
   const [notes, setNotes] = useState("");
 
   useEffect(() => {
-    // Check locally natively on client context preventing pre-flashes
     const token = localStorage.getItem("token");
     if (!token) {
       router.push("/login");
@@ -27,6 +26,11 @@ export default function AddLeadPage() {
       setIsAuthenticated(true);
     }
   }, [router]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    router.push("/login");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,16 +44,7 @@ export default function AddLeadPage() {
     }
 
     try {
-      const payload = {
-        name,
-        phone,
-        status,
-        followUpDate,
-        preferredAction,
-        leadSource,
-        notes,
-      };
-
+      const payload = { name, phone, status, followUpDate, preferredAction, leadSource, notes };
       const res = await fetch("/api/leads", {
         method: "POST",
         headers: {
@@ -72,7 +67,6 @@ export default function AddLeadPage() {
         return;
       }
 
-      // Automatically route back to the leads tracking UI
       router.push("/leads");
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
@@ -83,33 +77,53 @@ export default function AddLeadPage() {
   if (!isAuthenticated) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col py-8 px-4 sm:px-6 lg:px-8">
-      <main className="max-w-2xl mx-auto w-full">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-6 sm:p-8">
-          <div className="mb-6 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">Add New Lead</h1>
-            <button
-              type="button"
-              onClick={() => router.push("/leads")}
-              className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
-            >
-              Cancel
-            </button>
+    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <span className="text-xl font-extrabold text-black tracking-tight">LeadPilot</span>
+              <div className="hidden sm:ml-10 sm:flex sm:space-x-8">
+                <Link href="/dashboard" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-bold transition-colors">
+                  Dashboard
+                </Link>
+                <Link href="/leads" className="border-black text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-bold">
+                  Leads
+                </Link>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors border-2 border-gray-200 bg-white hover:bg-gray-50 rounded-xl px-5 py-2.5"
+              >
+                Logout
+              </button>
+            </div>
           </div>
+        </div>
+      </nav>
 
+      <main className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        <div className="mb-6">
+          <Link href="/leads" className="text-sm font-bold text-gray-400 hover:text-black mb-4 inline-block transition-colors">
+            ← Back to Leads
+          </Link>
+          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Add New Lead</h1>
+        </div>
+
+        <div className="bg-white shadow-sm rounded-2xl border border-gray-100 p-8 sm:p-10">
           {error && (
-            <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-lg border border-red-100 text-sm">
+            <div className="mb-8 p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 font-bold text-sm">
               {error}
             </div>
           )}
 
-          {/* Form mapping constraints statically via HTML inputs ensuring correct parsing structure */}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              
-              {/* Name (Required) */}
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               <div>
-                <label flex-auto="true" htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="name" className="block text-sm font-bold text-gray-700 mb-2">
                   Name *
                 </label>
                 <input
@@ -118,14 +132,13 @@ export default function AddLeadPage() {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600 focus:border-green-600 outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-black focus:border-black outline-none transition-all font-medium"
                   placeholder="John Doe"
                 />
               </div>
 
-              {/* Phone (Required) */}
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="phone" className="block text-sm font-bold text-gray-700 mb-2">
                   Phone *
                 </label>
                 <input
@@ -134,21 +147,20 @@ export default function AddLeadPage() {
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600 focus:border-green-600 outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-black focus:border-black outline-none transition-all font-medium"
                   placeholder="+1 234 567 890"
                 />
               </div>
 
-              {/* Status (Dropdown Mapped to Enums) */}
               <div>
-                <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="status" className="block text-sm font-bold text-gray-700 mb-2">
                   Status *
                 </label>
                 <select
                   id="status"
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600 focus:border-green-600 outline-none transition-colors bg-white"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-black focus:border-black outline-none transition-all font-bold text-gray-700"
                 >
                   <option value="NEW">New</option>
                   <option value="CONTACTED">Contacted</option>
@@ -158,16 +170,15 @@ export default function AddLeadPage() {
                 </select>
               </div>
 
-              {/* Preferred Action (Dropdown Mapped to Enums) */}
               <div>
-                <label htmlFor="preferredAction" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="preferredAction" className="block text-sm font-bold text-gray-700 mb-2">
                   Preferred Action
                 </label>
                 <select
                   id="preferredAction"
                   value={preferredAction}
                   onChange={(e) => setPreferredAction(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600 focus:border-green-600 outline-none transition-colors bg-white"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-black focus:border-black outline-none transition-all font-bold text-gray-700"
                 >
                   <option value="CALL">Call</option>
                   <option value="MESSAGE">Message</option>
@@ -175,9 +186,8 @@ export default function AddLeadPage() {
                 </select>
               </div>
 
-              {/* Follow-up Date (Required Native String Input wrapper) */}
               <div>
-                <label htmlFor="followUpDate" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="followUpDate" className="block text-sm font-bold text-gray-700 mb-2">
                   Follow-up Date *
                 </label>
                 <input
@@ -186,13 +196,12 @@ export default function AddLeadPage() {
                   required
                   value={followUpDate}
                   onChange={(e) => setFollowUpDate(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600 focus:border-green-600 outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-black focus:border-black outline-none transition-all font-medium text-gray-700"
                 />
               </div>
 
-              {/* Optional Standard Text Input Field */}
               <div>
-                <label htmlFor="leadSource" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="leadSource" className="block text-sm font-bold text-gray-700 mb-2">
                   Lead Source
                 </label>
                 <input
@@ -200,15 +209,14 @@ export default function AddLeadPage() {
                   type="text"
                   value={leadSource}
                   onChange={(e) => setLeadSource(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600 focus:border-green-600 outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-black focus:border-black outline-none transition-all font-medium"
                   placeholder="Website, Referral, etc."
                 />
               </div>
             </div>
 
-            {/* Formatted Area Constraint */}
             <div>
-              <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="notes" className="block text-sm font-bold text-gray-700 mb-2">
                 Notes
               </label>
               <textarea
@@ -216,24 +224,23 @@ export default function AddLeadPage() {
                 rows={4}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600 focus:border-green-600 outline-none transition-colors resize-y"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-black focus:border-black outline-none transition-all resize-y font-medium"
                 placeholder="Additional details about the lead..."
               />
             </div>
 
-            {/* Post Wrapper Constraints */}
-            <div className="pt-4 border-t border-gray-100 flex justify-end gap-3">
+            <div className="pt-8 border-t border-gray-100 flex justify-end gap-4">
               <button
                 type="button"
                 onClick={() => router.push("/leads")}
-                className="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-6 py-3 text-sm font-bold text-gray-700 bg-white border-2 border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-5 py-2.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors disabled:opacity-50"
+                className="px-8 py-3 text-sm font-bold text-white bg-black hover:bg-gray-800 rounded-xl transition-colors disabled:opacity-50"
               >
                 {loading ? "Saving..." : "Save Lead"}
               </button>
