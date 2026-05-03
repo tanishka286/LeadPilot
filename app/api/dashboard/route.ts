@@ -4,6 +4,7 @@ import Lead from '@/models/Lead';
 import UserStats from '@/models/UserStats';
 import User from '@/models/User';
 import { verifyAuth } from '@/lib/auth';
+import { buildTodayActionsFromLeads } from '@/lib/today-actions';
 
 export async function GET(req: NextRequest) {
   try {
@@ -33,87 +34,9 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // 2. Action generation logic
+    // 2. Action generation logic (shared with daily reminder cron)
     const leads = await Lead.find({ userId });
-    const actions = [];
-
-    const now = new Date();
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
-    for (const lead of leads) {
-      if (lead.status === 'CLOSED') continue;
-
-      let category = null;
-      let priority = null;
-      
-      const followUpDate = new Date(lead.followUpDate);
-      followUpDate.setHours(0, 0, 0, 0);
-
-      const isStatusHot = lead.status === 'INTERESTED' || lead.status === 'NEGOTIATION';
-      const isOverdue = followUpDate.getTime() < todayStart.getTime();
-      const isToday = followUpDate.getTime() === todayStart.getTime();
-
-      if (isOverdue) {
-        category = 'OVERDUE';
-        priority = 'HIGH';
-      } else if (isStatusHot) {
-        category = 'HOT';
-        priority = 'HIGH';
-      } else if (isToday) {
-        category = 'TODAY';
-        priority = 'MEDIUM';
-      }
-
-      // Do not include if condition fails
-      if (!category) continue;
-
-      // Determine action string prioritizing preferredAction
-      let actionType = lead.preferredAction;
-      if (!actionType) {
-        switch (lead.status) {
-          case 'NEW': actionType = 'CALL'; break;
-          case 'CONTACTED': actionType = 'MESSAGE'; break;
-          case 'INTERESTED': actionType = 'CALL'; break;
-          case 'NEGOTIATION': actionType = 'CLOSE'; break;
-          default: actionType = 'CALL';
-        }
-      }
-
-      // Extract formatting icon matching category string mapping
-      let icon = '';
-      if (category === 'OVERDUE') icon = '🔴';
-      else if (category === 'HOT') icon = '🔥';
-      else if (category === 'TODAY') icon = '🟡';
-
-      // Establish verbal syntax logic
-      let verb = '';
-      if (actionType === 'CALL') verb = 'Call';
-      else if (actionType === 'MESSAGE') verb = 'Message';
-      else if (actionType === 'CLOSE') verb = 'Close deal with';
-
-      const label = `${verb} ${lead.name} (${category === 'OVERDUE' ? 'Overdue' : category === 'HOT' ? 'Hot Lead' : 'Today'} ${icon})`;
-
-      actions.push({
-        leadId: lead._id.toString(),
-        name: lead.name,
-        phone: lead.phone,
-        actionType,
-        category,
-        priority,
-        followUpDate: lead.followUpDate,
-        status: lead.status,
-        label,
-      });
-    }
-
-    // 3. Sort internally prioritized properly
-    actions.sort((a, b) => {
-      const order: any = { 'OVERDUE': 1, 'HOT': 2, 'TODAY': 3 };
-      if (order[a.category] !== order[b.category]) {
-        return order[a.category] - order[b.category];
-      }
-      return new Date(a.followUpDate).getTime() - new Date(b.followUpDate).getTime();
-    });
+    const actions = buildTodayActionsFromLeads(leads);
 
     const user = await User.findById(userId);
 

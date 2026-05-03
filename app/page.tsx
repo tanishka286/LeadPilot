@@ -1,6 +1,5 @@
 import { Navbar } from '@/components/navbar'
 import { Hero } from '@/components/hero'
-import { SocialProof } from '@/components/social-proof'
 import { Features } from '@/components/features'
 import { HowItWorks } from '@/components/how-it-works'
 import { ValueSection } from '@/components/value-section'
@@ -9,10 +8,9 @@ import { Footer } from '@/components/footer'
 
 export default function Home() {
   return (
-    <main>
+    <main className="min-h-screen bg-white text-slate-900">
       <Navbar />
       <Hero />
-      <SocialProof />
       <Features />
       <HowItWorks />
       <ValueSection />

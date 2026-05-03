@@ -1,128 +1,103 @@
 'use client'
 
-import { ArrowRight, TrendingUp, BarChart3, Zap } from 'lucide-react'
+import Link from 'next/link'
+import { ListChecks, Flame } from 'lucide-react'
 
 export function Hero() {
   return (
-    <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 bg-gradient-to-b from-primary-50 to-white overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary-100 rounded-full opacity-40 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-primary-100 rounded-full opacity-40 blur-3xl" />
+    <section className="relative pt-28 pb-16 md:pt-36 md:pb-24 bg-gradient-to-br from-sky-50 via-white to-emerald-50 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-sky-200/45 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-emerald-200/40 rounded-full blur-3xl" />
       </div>
 
       <div className="section-container relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
-          {/* Left Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div className="flex flex-col gap-8">
             <div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
-                Sales Made Simple.
-                <span className="block text-primary-600">Deals Closed Faster.</span>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight tracking-tight mb-6">
+                Track your leads.
+                <span className="block bg-gradient-to-r from-emerald-600 to-emerald-700 bg-clip-text text-transparent mt-1">
+                  Set follow-ups. See what to do today.
+                </span>
               </h1>
-              <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-xl">
-                LeadPilot helps small businesses track leads, manage clients, and close more deals without complicated CRM setups. Get organized in minutes, not months.
+              <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-xl">
+                One list for who to call or message and when. Mark tasks done and keep a small streak when you show up
+                regularly.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button className="btn-primary flex items-center justify-center gap-2 text-base py-3">
-                Start Free Trial
-                <ArrowRight className="w-4 h-4" />
-              </button>
-              <button className="btn-secondary flex items-center justify-center gap-2 text-base py-3">
-                See How It Works
-              </button>
-            </div>
-
-            {/* Trust indicators */}
-            <div className="pt-4 flex items-center gap-6">
-              <div className="flex -space-x-2">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 border-2 border-white flex items-center justify-center text-white text-xs font-bold">
-                    {i}
-                  </div>
-                ))}
-              </div>
-              <p className="text-sm text-gray-600">
-                <span className="font-semibold text-gray-900">500+</span> teams already growing with LeadPilot
-              </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                href="#how-it-works"
+                className="btn-secondary flex items-center justify-center gap-2 text-base py-3 cursor-pointer"
+              >
+                How it works
+              </Link>
             </div>
           </div>
 
-          {/* Right Dashboard Mockup */}
           <div className="relative">
-            <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-soft-lg overflow-hidden border border-gray-700">
-              {/* Window header */}
-              <div className="bg-gray-800 border-b border-gray-700 px-4 py-3 flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-500" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                <div className="w-3 h-3 rounded-full bg-green-500" />
+            <div className="bg-gradient-to-br from-slate-800 via-emerald-950 to-sky-950 rounded-2xl shadow-soft-lg overflow-hidden border border-emerald-800/40 ring-1 ring-sky-500/20">
+              <div className="bg-slate-900/80 border-b border-emerald-800/50 px-4 py-3 flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                <div className="w-3 h-3 rounded-full bg-sky-400/70" />
+                <div className="w-3 h-3 rounded-full bg-white/25" />
               </div>
 
-              {/* Dashboard content */}
               <div className="p-6 space-y-4">
-                {/* Header bar */}
                 <div className="flex items-center justify-between">
-                  <div className="h-2 w-24 bg-gray-700 rounded" />
+                  <div className="h-2 w-28 bg-sky-400/30 rounded" />
                   <div className="flex gap-2">
-                    <div className="h-8 w-8 bg-gray-700 rounded" />
-                    <div className="h-8 w-8 bg-gray-700 rounded" />
+                    <div className="h-8 w-8 bg-emerald-500/20 rounded border border-emerald-500/30" />
+                    <div className="h-8 w-8 bg-sky-500/20 rounded border border-sky-400/30" />
                   </div>
                 </div>
 
-                {/* Stats row */}
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="bg-gray-700 rounded-lg p-3">
-                    <div className="h-2 w-16 bg-gray-600 rounded mb-2" />
-                    <div className="h-4 w-12 bg-primary-500 rounded" />
-                  </div>
-                  <div className="bg-gray-700 rounded-lg p-3">
-                    <div className="h-2 w-16 bg-gray-600 rounded mb-2" />
-                    <div className="h-4 w-12 bg-primary-500 rounded" />
-                  </div>
-                  <div className="bg-gray-700 rounded-lg p-3">
-                    <div className="h-2 w-16 bg-gray-600 rounded mb-2" />
-                    <div className="h-4 w-12 bg-primary-500 rounded" />
-                  </div>
+                <div className="grid grid-cols-3 gap-3">
+                  {['Today', 'Overdue', 'Hot'].map((label) => (
+                    <div key={label} className="bg-white/5 rounded-lg p-3 border border-white/10">
+                      <div className="h-2 w-12 bg-sky-300/40 rounded mb-2" />
+                      <div className="h-4 w-8 bg-emerald-400/80 rounded" />
+                      <p className="text-[10px] text-sky-200/70 mt-2 font-medium uppercase tracking-wide">{label}</p>
+                    </div>
+                  ))}
                 </div>
 
-                {/* Table mock */}
-                <div className="space-y-3 pt-4">
+                <div className="space-y-3 pt-2">
                   {[1, 2, 3].map((i) => (
-                    <div key={i} className="flex items-center justify-between border-b border-gray-700 pb-3">
+                    <div key={i} className="flex items-center justify-between border-b border-white/10 pb-3">
                       <div className="space-y-1 flex-1">
-                        <div className="h-2 w-32 bg-gray-600 rounded" />
-                        <div className="h-1.5 w-24 bg-gray-700 rounded" />
+                        <div className="h-2 w-32 bg-white/20 rounded" />
+                        <div className="h-1.5 w-24 bg-sky-300/25 rounded" />
                       </div>
-                      <div className="h-2 w-16 bg-primary-500/30 rounded" />
+                      <div className="h-2 w-14 bg-emerald-400/50 rounded" />
                     </div>
                   ))}
                 </div>
               </div>
             </div>
 
-            {/* Floating cards */}
-            <div className="absolute -top-4 -left-4 bg-white rounded-xl shadow-soft-lg border border-gray-100 p-3 max-w-xs hidden lg:block">
+            <div className="absolute -top-4 -left-4 bg-white rounded-xl shadow-soft-lg border border-sky-100 ring-1 ring-emerald-100/60 p-3 max-w-[220px] hidden lg:block">
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                  <TrendingUp className="w-5 h-5 text-primary-600" />
+                <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center shrink-0">
+                  <ListChecks className="w-5 h-5 text-emerald-700" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-600">Pipeline Value</p>
-                  <p className="text-sm font-bold text-gray-900">$125,000</p>
+                  <p className="text-xs text-slate-500">Today&apos;s actions</p>
+                  <p className="text-sm font-semibold text-slate-900">Follow-ups due</p>
                 </div>
               </div>
             </div>
 
-            <div className="absolute -bottom-4 -right-4 bg-white rounded-xl shadow-soft-lg border border-gray-100 p-3 max-w-xs hidden lg:block">
+            <div className="absolute -bottom-4 -right-4 bg-white rounded-xl shadow-soft-lg border border-sky-100 ring-1 ring-emerald-100/60 p-3 max-w-[220px] hidden lg:block">
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-green-600" />
+                <div className="w-10 h-10 bg-sky-100 rounded-lg flex items-center justify-center shrink-0">
+                  <Flame className="w-5 h-5 text-sky-700" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-600">Deals Closed</p>
-                  <p className="text-sm font-bold text-gray-900">+8 This Week</p>
+                  <p className="text-xs text-slate-500">Streak</p>
+                  <p className="text-sm font-semibold text-slate-900">Build your streak</p>
                 </div>
               </div>
             </div>
