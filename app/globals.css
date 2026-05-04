@@ -2,21 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 body {
-  @apply bg-white;
+  @apply bg-white dark:bg-gray-900;
 }
 
 @layer components {
   .btn-primary {
-    @apply cursor-pointer px-6 py-2.5 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-600 to-emerald-700 shadow-md shadow-emerald-600/20 transition-all duration-300 hover:from-emerald-700 hover:to-emerald-800 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply cursor-pointer px-6 py-2.5 rounded-xl font-medium bg-gray-900 text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-100 transition-all duration-200 ease-in-out hover:scale-[1.02] active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-sm;
   }
 
   .btn-ghost {
-    @apply cursor-pointer px-6 py-2.5 bg-white/80 text-slate-800 rounded-lg font-medium border border-sky-200 transition-all duration-300 hover:bg-sky-50 hover:border-sky-300 active:scale-95;
+    @apply cursor-pointer px-6 py-2.5 rounded-xl font-medium border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 ease-in-out hover:scale-[1.02] active:scale-100 disabled:opacity-50 disabled:hover:scale-100;
   }
 
   .btn-secondary {
-    @apply cursor-pointer px-6 py-2.5 bg-sky-100 text-slate-800 rounded-lg font-medium border border-sky-200/80 transition-all duration-300 hover:bg-sky-200/90 active:scale-95;
+    @apply cursor-pointer px-6 py-2.5 rounded-xl font-medium border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/40 text-primary-800 dark:text-primary-200 hover:bg-primary-100/80 dark:hover:bg-primary-900/50 transition-all duration-200 ease-in-out hover:scale-[1.02] active:scale-100 disabled:opacity-50 disabled:hover:scale-100;
   }
 
   .section-container {

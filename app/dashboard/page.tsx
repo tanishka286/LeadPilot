@@ -18,12 +18,20 @@ import {
 import { useToast } from "@/components/providers";
 import { SubmitSpinner } from "@/components/submit-spinner";
 
+type Priority = "OVERDUE" | "HOT" | "TODAY";
+
+function formatPriorityLabel(priority: Priority): string {
+  if (priority === "OVERDUE") return "Overdue";
+  if (priority === "HOT") return "Hot";
+  return "Today";
+}
+
 interface Action {
   leadId: string;
   name: string;
   phone: string;
   actionType: string;
-  category: string;
+  category: Priority;
   priority: string;
   followUpDate: string;
   status: string;
@@ -60,32 +68,29 @@ function getPriorityStyle(category: string) {
       return {
         border: "border-l-red-500",
         badgeClass:
-          "bg-red-50 text-red-800 border-red-200 ring-2 ring-red-100/80 font-bold",
+          "bg-red-50 dark:bg-red-950/50 text-red-800 dark:text-red-200 border border-red-200/80 dark:border-red-800/80 font-semibold shadow-sm",
         label: "Overdue",
-        emoji: "🔴",
       };
     case "HOT":
       return {
         border: "border-l-orange-500",
         badgeClass:
-          "bg-orange-50 text-orange-900 border-orange-200 ring-2 ring-orange-100/80 font-bold",
+          "bg-orange-50 dark:bg-orange-950/40 text-orange-900 dark:text-orange-200 border border-orange-200/80 dark:border-orange-800/80 font-semibold shadow-sm",
         label: "Hot",
-        emoji: "🔥",
       };
     case "TODAY":
       return {
         border: "border-l-yellow-500",
         badgeClass:
-          "bg-yellow-50 text-yellow-900 border-yellow-200 ring-2 ring-yellow-100/80 font-bold",
+          "bg-yellow-50 dark:bg-yellow-950/35 text-yellow-900 dark:text-yellow-100 border border-yellow-200/80 dark:border-yellow-800/80 font-semibold shadow-sm",
         label: "Today",
-        emoji: "🟡",
       };
     default:
       return {
-        border: "border-l-gray-300",
-        badgeClass: "bg-gray-50 text-gray-800 border-gray-200",
+        border: "border-l-gray-300 dark:border-l-gray-500",
+        badgeClass:
+          "bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-600",
         label: category,
-        emoji: "",
       };
   }
 }
@@ -233,40 +238,39 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100/80 flex flex-col font-sans text-gray-900">
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 via-gray-50 to-gray-100/90 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 flex flex-col font-sans text-gray-900 dark:text-white">
         <AppNavbar active="dashboard" onLogout={handleLogout} />
-        <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 w-full">
-          <div className="mb-8 sm:mb-10 space-y-3">
-            <div className="h-9 sm:h-11 w-64 max-w-full rounded-lg bg-gray-200/80 animate-pulse" />
-            <div className="h-5 w-full max-w-xl rounded bg-gray-200/70 animate-pulse" />
+        <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 w-full">
+          <div className="relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-slate-50 via-white to-primary-50/50 dark:from-gray-800 dark:via-gray-800 dark:to-primary-900/30 p-8 sm:p-10 shadow-sm transition-all duration-200 ease-in-out mb-8 sm:mb-10">
+            <div className="space-y-3 relative">
+              <div className="h-9 sm:h-12 w-72 max-w-full rounded-xl bg-gray-200/90 dark:bg-gray-600/90 animate-pulse" />
+              <div className="h-5 w-full max-w-md rounded-lg bg-gray-200/70 dark:bg-gray-600/70 animate-pulse" />
+            </div>
           </div>
-          <div className="rounded-2xl border border-gray-200 bg-gray-100/90 p-6 sm:p-10 shadow-soft min-h-[220px] sm:min-h-[200px] mb-10 sm:mb-12">
-            <div className="grid sm:grid-cols-2 gap-8 sm:gap-10">
-              <div className="space-y-3">
-                <div className="h-4 w-40 rounded bg-gray-200/80 animate-pulse" />
-                <div className="h-10 w-24 rounded bg-gray-200/70 animate-pulse" />
-                <div className="h-4 w-full max-w-xs rounded bg-gray-200/60 animate-pulse" />
-              </div>
-              <div className="space-y-3 sm:border-l sm:border-gray-200 sm:pl-10">
-                <div className="h-4 w-24 rounded bg-gray-200/80 animate-pulse" />
-                <div className="h-10 w-20 rounded bg-gray-200/70 animate-pulse" />
-                <div className="h-4 w-full max-w-xs rounded bg-gray-200/60 animate-pulse" />
-              </div>
+          <div className="grid sm:grid-cols-2 gap-5 mb-10 sm:mb-12">
+            <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-white to-primary-50/30 dark:from-gray-800 dark:to-primary-900/20 p-8 shadow-sm min-h-[160px] animate-pulse">
+              <div className="h-4 w-44 rounded bg-gray-200/80 dark:bg-gray-600/80 mb-4" />
+              <div className="h-14 w-20 rounded-lg bg-gray-200/70 dark:bg-gray-600/70" />
+            </div>
+            <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-white to-primary-50/30 dark:from-gray-800 dark:to-primary-900/20 p-8 shadow-sm min-h-[160px] animate-pulse">
+              <div className="h-4 w-36 rounded bg-gray-200/80 dark:bg-gray-600/80 mb-4" />
+              <div className="h-14 w-24 rounded-lg bg-gray-200/70 dark:bg-gray-600/70" />
             </div>
           </div>
           <div className="flex items-center gap-3 mb-6">
-            <div className="h-7 w-48 rounded bg-gray-200/80 animate-pulse" />
-            <div className="h-10 w-10 rounded-full border-2 border-gray-200 border-t-gray-800 animate-spin shrink-0 ml-auto" aria-hidden />
+            <div className="h-7 w-48 rounded-lg bg-gray-200/80 dark:bg-gray-600/80 animate-pulse" />
+            <div className="h-10 w-10 rounded-full border-2 border-gray-200 dark:border-gray-600 border-t-gray-800 dark:border-t-gray-200 animate-spin shrink-0 ml-auto" aria-hidden />
           </div>
-          <div className="space-y-5">
+          <div className="space-y-6">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-gray-200/90 bg-white p-5 sm:p-6 shadow-soft min-h-[9.5rem] animate-pulse"
+                className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8 shadow-sm min-h-[11rem] animate-pulse border-l-4 border-l-gray-200 dark:border-l-gray-600 transition-all duration-200 ease-in-out"
               >
-                <div className="h-5 w-40 rounded bg-gray-100 mb-4" />
-                <div className="h-4 w-full max-w-md rounded bg-gray-100 mb-2" />
-                <div className="h-4 w-32 rounded bg-gray-100" />
+                <div className="h-7 w-48 rounded-lg bg-gray-100 dark:bg-gray-700 mb-5" />
+                <div className="h-4 w-full max-w-md rounded bg-gray-100 dark:bg-gray-700 mb-3" />
+                <div className="h-4 w-32 rounded bg-gray-100 dark:bg-gray-700 mb-6" />
+                <div className="h-12 w-full max-w-xs rounded-xl bg-gray-100 dark:bg-gray-700 ml-auto" />
               </div>
             ))}
           </div>
@@ -276,84 +280,99 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100/80 flex flex-col font-sans text-gray-900">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-gray-50 to-gray-100/90 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 flex flex-col font-sans text-gray-900 dark:text-white">
       <AppNavbar active="dashboard" onLogout={handleLogout} />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 w-full">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 w-full">
         {data && (
           <>
-            <div className="mb-8 sm:mb-10">
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900">
-                Good morning, {data.userName}
-              </h1>
-              <p className="mt-2 text-base sm:text-lg text-gray-600 font-medium">
-                Your list for today—calls, messages, and follow-ups in one place.
-              </p>
-            </div>
-
-            <div className="mb-10 sm:mb-12">
-              <div className="rounded-2xl border border-gray-200 bg-gray-100/90 p-6 sm:p-10 shadow-soft ring-1 ring-gray-900/5 min-h-[220px] sm:min-h-[200px]">
-                <div className="flex items-start gap-3 mb-8">
-                  <div className="rounded-xl bg-primary-50 p-2.5 text-primary-600">
-                    <Sparkles className="h-5 w-5" />
+            <header className="relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-slate-50 via-white to-primary-50/60 dark:from-gray-800 dark:via-gray-800 dark:to-primary-900/40 p-8 sm:p-10 shadow-sm mb-8 sm:mb-10 ring-1 ring-gray-900/[0.04] dark:ring-white/[0.06] transition-all duration-200 ease-in-out hover:shadow-lg">
+              <div
+                className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-gradient-to-br from-primary-200/35 via-primary-100/20 to-transparent blur-2xl"
+                aria-hidden
+              />
+              <div className="relative flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+                <div className="min-w-0 space-y-2">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-white/70 dark:bg-gray-900/60 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary-700 dark:text-primary-300 ring-1 ring-primary-200/60 dark:ring-primary-700/50 shadow-sm backdrop-blur-sm">
+                    <Sparkles className="h-3.5 w-3.5" aria-hidden />
+                    Today
                   </div>
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-gray-500">
-                      Today at a glance
-                    </p>
-                    <p className="text-sm text-gray-600 mt-0.5">
-                      Tasks you finished today and your current streak
-                    </p>
-                  </div>
+                  <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                    Good morning, {data.userName}
+                  </h1>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 max-w-xl leading-relaxed mt-1">
+                    Here&apos;s what you need to do today
+                  </p>
                 </div>
-                <div className="grid sm:grid-cols-2 gap-8 sm:gap-10">
-                  <div className="space-y-3">
-                    <p className="text-sm font-medium text-gray-600">Tasks completed today</p>
-                    <p className="text-3xl sm:text-4xl font-bold text-gray-900 tabular-nums leading-none">
-                      <span className="text-primary-600">{data.stats.completedTasksToday}</span>
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {data.stats.completedTasksToday === 1 ? "task" : "tasks"} marked done since midnight.
-                    </p>
-                  </div>
-                  <div className="sm:border-l sm:border-gray-200 sm:pl-10 space-y-3">
-                    <p className="text-sm font-medium text-gray-600">Streak</p>
-                    <p className="text-3xl sm:text-4xl font-bold text-gray-900 tabular-nums leading-none flex items-baseline gap-2">
-                      <span>{data.stats.streak}</span>
-                      <span className="text-lg sm:text-xl font-semibold text-gray-600">
-                        {data.stats.streak === 1 ? "day" : "days"}
-                      </span>
-                      <span className="text-4xl sm:text-5xl leading-none" aria-hidden>
-                        🔥
-                      </span>
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Complete at least one task on days you use the app.
-                    </p>
-                  </div>
+              </div>
+            </header>
+
+            <div className="grid sm:grid-cols-2 gap-5 mb-10 sm:mb-12">
+              <div className="relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-white via-white to-primary-50/50 dark:from-gray-800 dark:via-gray-800 dark:to-primary-900/30 p-8 sm:p-9 shadow-sm ring-1 ring-gray-900/[0.04] dark:ring-white/[0.06] transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-0.5">
+                <div
+                  className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_0%_0%,rgba(59,130,246,0.12),transparent_55%)]"
+                  aria-hidden
+                />
+                <div className="relative space-y-2">
+                  <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 tracking-tight">
+                    Tasks completed today
+                  </p>
+                  <p className="text-5xl sm:text-6xl font-bold tabular-nums leading-none tracking-tight text-primary-600 dark:text-primary-400">
+                    {data.stats.completedTasksToday}
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 pt-1">
+                    {data.stats.completedTasksToday === 1 ? "task" : "tasks"} marked done since midnight.
+                  </p>
+                </div>
+              </div>
+              <div className="relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-white via-white to-primary-50/40 dark:from-gray-800 dark:via-gray-800 dark:to-primary-900/25 p-8 sm:p-9 shadow-sm ring-1 ring-gray-900/[0.04] dark:ring-white/[0.06] transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-0.5">
+                <div
+                  className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_100%_0%,rgba(59,130,246,0.1),transparent_55%)]"
+                  aria-hidden
+                />
+                <div className="relative space-y-2">
+                  <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 tracking-tight flex items-center gap-2">
+                    Current streak{" "}
+                    <span className="text-lg leading-none" aria-hidden>
+                      🔥
+                    </span>
+                  </p>
+                  <p className="text-5xl sm:text-6xl font-bold tabular-nums leading-none tracking-tight text-primary-600 dark:text-primary-400 flex items-baseline gap-2 flex-wrap">
+                    <span>{data.stats.streak}</span>
+                    <span className="text-xl sm:text-2xl font-semibold text-gray-500 dark:text-gray-400">
+                      {data.stats.streak === 1 ? "day" : "days"}
+                    </span>
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 pt-1">
+                    Complete at least one task on days you use the app.
+                  </p>
                 </div>
               </div>
             </div>
 
             <section className="mb-12 sm:mb-14">
-              <div className="flex items-end justify-between gap-4 mb-6">
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">
+              <div className="flex items-end justify-between gap-4 mb-7">
+                <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white tracking-tight">
                   Today&apos;s actions
                 </h2>
                 {data.actions.length > 0 && (
-                  <span className="text-sm font-semibold text-gray-500 tabular-nums shrink-0">
+                  <span className="text-sm font-semibold text-gray-500 dark:text-gray-400 tabular-nums shrink-0 rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1">
                     {data.actions.length} due
                   </span>
                 )}
               </div>
 
-              <div className="space-y-5">
+              <div className="space-y-6">
                 {data.actions.length === 0 ? (
-                  <div className="rounded-2xl border border-dashed border-gray-200 bg-white/80 px-8 py-16 text-center shadow-soft">
-                    <p className="text-lg sm:text-xl font-semibold text-gray-800">
-                      You&apos;re all caught up today
+                  <div className="relative overflow-hidden rounded-2xl border border-dashed border-gray-300 dark:border-gray-600 bg-gradient-to-b from-white to-gray-50/80 dark:from-gray-800 dark:to-gray-800/90 px-8 py-20 text-center shadow-sm transition-all duration-200 ease-in-out">
+                    <div
+                      className="pointer-events-none absolute inset-x-0 -top-px h-24 bg-gradient-to-b from-primary-100/30 to-transparent"
+                      aria-hidden
+                    />
+                    <p className="relative text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white tracking-tight">
+                      You&apos;re all caught up today 🎉
                     </p>
-                    <p className="mt-2 text-gray-600 max-w-md mx-auto">
+                    <p className="relative mt-3 text-sm text-gray-600 dark:text-gray-400 max-w-md mx-auto">
                       New items appear here when a follow-up is due.
                     </p>
                   </div>
@@ -365,55 +384,60 @@ export default function DashboardPage() {
                     return (
                       <article
                         key={action.leadId}
-                        className={`group rounded-2xl border border-gray-200/90 bg-white p-5 sm:p-6 shadow-soft hover:shadow-soft-lg transition-shadow border-l-4 min-h-[9.5rem] ${priority.border}`}
+                        className={`group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8 shadow-sm border-l-[5px] transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-0.5 ${priority.border}`}
                       >
-                        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
-                          <div className="space-y-3 min-w-0 flex-1">
-                            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                              <h3 className="text-lg font-semibold text-gray-900 truncate">
+                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white via-transparent to-gray-50/40 dark:from-gray-800 dark:to-gray-800/80 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+                        <div className="relative flex flex-col lg:flex-row lg:items-stretch lg:justify-between gap-6 lg:gap-10">
+                          <div className="min-w-0 flex-1 space-y-5">
+                            <div className="flex flex-wrap items-start justify-between gap-3">
+                              <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white tracking-tight break-words">
                                 {action.name}
                               </h3>
                               <span
-                                className={`inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs border shrink-0 ${priority.badgeClass}`}
+                                className={`inline-flex items-center rounded-full px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wide shrink-0 ${priority.badgeClass}`}
                               >
-                                <span aria-hidden>{priority.emoji}</span>
-                                {priority.label}
+                                {formatPriorityLabel(action.category)}
                               </span>
                             </div>
-                            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-gray-600">
-                              <span className="inline-flex items-center gap-1.5 text-gray-700">
-                                <ActionIcon className="h-4 w-4 text-gray-400 shrink-0" />
-                                <span className="text-gray-500 font-medium text-xs uppercase tracking-wide">
-                                  Action
+                            <div className="flex flex-wrap items-center gap-4">
+                              <div className="flex min-w-0 items-center gap-3 rounded-xl bg-gray-50/90 dark:bg-gray-900/50 px-4 py-3 ring-1 ring-gray-200/60 dark:ring-gray-600/60">
+                                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-gray-700 text-primary-600 dark:text-primary-400 shadow-sm ring-1 ring-gray-200/80 dark:ring-gray-600/80">
+                                  <ActionIcon className="h-5 w-5" aria-hidden />
                                 </span>
-                                <span className="text-sm font-medium">{actionLabel}</span>
-                              </span>
-                              <span className="text-gray-300 hidden sm:inline">
-                                ·
-                              </span>
-                              <span className="text-sm font-medium tabular-nums text-gray-600">
+                                <div>
+                                  <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                    Action
+                                  </p>
+                                  <p className="text-base font-semibold text-gray-900 dark:text-white">
+                                    {actionLabel}
+                                  </p>
+                                </div>
+                              </div>
+                              <p className="text-sm tabular-nums text-gray-500 dark:text-gray-400 sm:ml-1">
                                 {action.phone}
-                              </span>
+                              </p>
                             </div>
                           </div>
-                          <button
-                            type="button"
-                            disabled={selectedLead !== null || actionLoading}
-                            onClick={() => setSelectedLead(action.leadId)}
-                            className="shrink-0 w-full lg:w-auto cursor-pointer inline-flex items-center justify-center gap-2 rounded-xl bg-black text-white font-semibold py-3 px-6 shadow-md hover:bg-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                            {actionLoading && selectedLead === action.leadId ? (
-                              <>
-                                <SubmitSpinner className="border-white/40 border-t-white" />
-                                Loading...
-                              </>
-                            ) : (
-                              <>
-                                Mark as Done
-                                <CheckCircle2 className="h-4 w-4 opacity-90" />
-                              </>
-                            )}
-                          </button>
+                          <div className="flex items-end lg:items-center shrink-0">
+                            <button
+                              type="button"
+                              disabled={selectedLead !== null || actionLoading}
+                              onClick={() => setSelectedLead(action.leadId)}
+                              className="w-full lg:w-auto cursor-pointer inline-flex items-center justify-center gap-2 rounded-xl bg-gray-900 text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-100 font-semibold py-3.5 px-8 min-h-[3rem] shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/20 dark:focus-visible:ring-white/20 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 transition-all duration-200 ease-in-out enabled:hover:scale-[1.02] enabled:active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                            >
+                              {actionLoading && selectedLead === action.leadId ? (
+                                <>
+                                  <SubmitSpinner className="border-white/40 border-t-white dark:border-gray-300/50 dark:border-t-black" />
+                                  Loading...
+                                </>
+                              ) : (
+                                <>
+                                  Mark as Done
+                                  <CheckCircle2 className="h-4 w-4 opacity-90" />
+                                </>
+                              )}
+                            </button>
+                          </div>
                         </div>
                       </article>
                     );
@@ -423,16 +447,16 @@ export default function DashboardPage() {
             </section>
 
             <section className="pb-4">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight mb-2">
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white tracking-tight mb-2">
                 How LeadPilot works
               </h2>
-              <p className="text-gray-600 mb-8 max-w-2xl">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-8 max-w-2xl">
                 Add leads, set follow-ups, work the today list, and keep a streak when you stay consistent.
               </p>
 
               <div className="relative">
                 <div
-                  className="hidden md:block absolute left-[1.375rem] top-10 bottom-10 w-px bg-gradient-to-b from-gray-200 via-primary-200 to-gray-200"
+                  className="hidden md:block absolute left-[1.375rem] top-10 bottom-10 w-px bg-gradient-to-b from-gray-200 via-primary-200 to-gray-200 dark:from-gray-600 dark:via-primary-800 dark:to-gray-600"
                   aria-hidden
                 />
                 <ul className="space-y-7 md:space-y-9">
@@ -440,23 +464,23 @@ export default function DashboardPage() {
                     <li key={step}>
                       <div className="flex gap-4 md:gap-6">
                         <div className="flex flex-col items-center shrink-0">
-                          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white border-2 border-gray-200 text-base font-bold text-gray-900 shadow-sm z-[1]">
+                          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 text-base font-bold text-gray-900 dark:text-white shadow-sm z-[1]">
                             {step}
                           </div>
                         </div>
-                        <div className="flex-1 rounded-2xl border border-gray-200 bg-white p-5 shadow-soft hover:shadow-soft-lg transition-shadow min-w-0 min-h-[8.25rem]">
+                        <div className="flex-1 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 shadow-sm transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-0.5 min-w-0 min-h-[8.25rem]">
                           <div className="flex items-start gap-3">
-                            <div className="rounded-xl bg-gray-50 p-2 text-gray-700">
+                            <div className="rounded-xl bg-gray-50 dark:bg-gray-700/80 p-2 text-gray-700 dark:text-gray-200">
                               <Icon className="h-5 w-5" />
                             </div>
                             <div>
-                              <h3 className="font-bold text-gray-900 text-lg">
+                              <h3 className="font-semibold text-gray-900 dark:text-white text-lg tracking-tight">
                                 {title}
                               </h3>
-                              <p className="text-sm font-semibold text-gray-700 mt-0.5">
+                              <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mt-0.5">
                                 {line}
                               </p>
-                              <p className="mt-1 text-sm text-gray-600 leading-relaxed">
+                              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                                 {body}
                               </p>
                             </div>
@@ -479,15 +503,15 @@ export default function DashboardPage() {
           aria-modal="true"
           aria-labelledby="followup-modal-title"
         >
-          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-gray-200 ring-1 ring-black/5 overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl max-w-md w-full shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-200 ease-in-out">
             <div className="px-6 pt-6 pb-2">
               <h3
                 id="followup-modal-title"
-                className="text-xl font-bold text-gray-900 text-center tracking-tight"
+                className="text-xl font-semibold text-gray-900 dark:text-white text-center tracking-tight"
               >
                 Set next follow-up
               </h3>
-              <p className="text-sm text-gray-500 text-center mt-2">
+              <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-2">
                 When should we remind you about this lead?
               </p>
             </div>
@@ -498,11 +522,11 @@ export default function DashboardPage() {
                   type="button"
                   disabled={actionLoading}
                   onClick={() => handleCompleteTask(opt)}
-                  className="w-full cursor-pointer rounded-xl border border-gray-200 bg-white py-3.5 px-4 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors inline-flex items-center justify-center gap-2"
+                  className="w-full cursor-pointer rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 py-3.5 px-4 text-sm font-semibold text-gray-900 dark:text-gray-100 shadow-sm hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/20 dark:focus-visible:ring-white/10 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 ease-in-out hover:scale-[1.01] inline-flex items-center justify-center gap-2"
                 >
                   {actionLoading ? (
                     <>
-                      <SubmitSpinner className="border-gray-300 border-t-gray-800" />
+                      <SubmitSpinner className="border-gray-300 border-t-gray-800 dark:border-gray-500 dark:border-t-gray-200" />
                       Loading...
                     </>
                   ) : (
@@ -510,16 +534,16 @@ export default function DashboardPage() {
                   )}
                 </button>
               ))}
-              <div className="pt-2 border-t border-gray-100 mt-4">
+              <div className="pt-2 border-t border-gray-100 dark:border-gray-700 mt-4">
                 <button
                   type="button"
                   disabled={actionLoading}
                   onClick={() => handleCompleteTask("No Follow-up")}
-                  className="w-full cursor-pointer py-3 text-sm font-semibold text-gray-500 hover:text-gray-800 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
+                  className="w-full cursor-pointer py-3 text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
                 >
                   {actionLoading ? (
                     <>
-                      <SubmitSpinner className="border-gray-300 border-t-gray-600" />
+                      <SubmitSpinner className="border-gray-300 border-t-gray-600 dark:border-gray-500 dark:border-t-gray-300" />
                       Loading...
                     </>
                   ) : (
@@ -531,7 +555,7 @@ export default function DashboardPage() {
                 type="button"
                 disabled={actionLoading}
                 onClick={() => setSelectedLead(null)}
-                className="w-full cursor-pointer py-3 text-sm font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                className="w-full cursor-pointer py-3 text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent dark:disabled:hover:bg-transparent"
               >
                 Cancel
               </button>

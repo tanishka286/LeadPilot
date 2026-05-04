@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { Providers } from '@/components/providers'
+import { ThemeInit } from '@/components/theme-init'
 
 export const metadata: Metadata = {
   title: 'LeadPilot - Sales Made Simple',
@@ -23,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className="antialiased">
+        <ThemeInit />
         <Providers>{children}</Providers>
       </body>
     </html>

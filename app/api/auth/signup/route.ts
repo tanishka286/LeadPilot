@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import connectToDatabase from '@/lib/mongodb';
+import { sendEmail } from '@/lib/email';
 import User from '@/models/User';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, email, password } = body;
+    const { name, email, password, phone } = body;
+
+    if (phone !== undefined && phone !== null && typeof phone !== 'string') {
+      return NextResponse.json(
+        { error: true, message: 'Phone must be a string' },
+        { status: 400 }
+      );
+    }
 
     // Validate inputs
     if (!name || name.length < 2) {
@@ -31,6 +39,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not defined');
+    }
+
     // Connect to MongoDB
     await connectToDatabase();
 
@@ -52,7 +64,37 @@ export async function POST(req: NextRequest) {
       name,
       email,
       password: hashedPassword,
+      ...(typeof phone === 'string' && phone.trim() !== ''
+        ? { phone: phone.trim() }
+        : {}),
     });
+
+    const welcomeBody = `Hi ${newUser.name},
+
+Welcome to LeadPilot.
+
+LeadPilot helps you manage leads and follow-ups using a simple daily action system.
+
+Here's how it works:
+
+* Add your leads
+* Set follow-up dates
+* Get daily tasks
+* Complete actions and build your streak
+
+Open LeadPilot and start managing your leads.
+
+— LeadPilot`;
+
+    try {
+      await sendEmail(
+        newUser.email,
+        'Welcome to LeadPilot 🚀',
+        welcomeBody
+      );
+    } catch (err) {
+      console.error("Welcome email failed:", err);
+    }
 
     // Return the specific structure
     return NextResponse.json(

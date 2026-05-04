@@ -30,7 +30,7 @@ export async function verifyAuth(req: NextRequest): Promise<AuthResult> {
     const jwtSecret = process.env.JWT_SECRET;
 
     if (!jwtSecret) {
-      return { error: 'Unauthorized' };
+      throw new Error('JWT_SECRET is not defined');
     }
 
     // Attempt to verify jsonwebtoken decoding

@@ -9,6 +9,7 @@ export default function SignupPage() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,7 +23,7 @@ export default function SignupPage() {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, phone }),
       });
 
       const data = await res.json();
@@ -113,6 +114,25 @@ export default function SignupPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="appearance-none block w-full px-4 py-3 border border-sky-200 rounded-xl shadow-sm placeholder-slate-400 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
                 placeholder="you@example.com"
+              />
+            </div>
+
+            <div>
+              <label
+                className="block text-sm font-bold text-slate-700 mb-2"
+                htmlFor="phone"
+              >
+                Phone Number{" "}
+                <span className="font-normal text-slate-500">(optional)</span>
+              </label>
+              <input
+                id="phone"
+                type="tel"
+                autoComplete="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="appearance-none block w-full px-4 py-3 border border-sky-200 rounded-xl shadow-sm placeholder-slate-400 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+                placeholder="+1 555 000 0000"
               />
             </div>
 

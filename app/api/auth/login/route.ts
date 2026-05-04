@@ -25,6 +25,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not defined');
+    }
+
     // Connect to MongoDB
     await connectToDatabase();
 
@@ -46,15 +50,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Generate JWT
-    const jwtSecret = process.env.JWT_SECRET;
-    if (!jwtSecret) {
-      throw new Error('JWT_SECRET is not defined');
-    }
-
     const token = jwt.sign(
       { userId: user._id.toString(), email: user.email },
-      jwtSecret,
+      process.env.JWT_SECRET as string,
       { expiresIn: '7d' }
     );
 

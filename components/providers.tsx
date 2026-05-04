@@ -37,7 +37,7 @@ export function Providers({ children }: { children: ReactNode }) {
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-6 left-1/2 z-[100] max-w-[min(90vw,24rem)] -translate-x-1/2 rounded-xl border border-gray-200 bg-gray-900 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-gray-900/20"
+          className="fixed bottom-6 left-1/2 z-[100] max-w-[min(90vw,24rem)] -translate-x-1/2 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-900 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-gray-900/20"
         >
           {message}
         </div>

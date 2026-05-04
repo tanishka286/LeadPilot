@@ -8,8 +8,13 @@ import { useToast } from "@/components/providers";
 import { SubmitSpinner } from "@/components/submit-spinner";
 
 const inputClass =
-  "w-full px-4 py-3.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-shadow font-medium text-gray-900";
-const labelClass = "block text-sm font-semibold text-gray-700 mb-2.5";
+  "w-full px-4 py-3.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900/20 dark:focus:ring-white/10 focus:border-gray-400 dark:focus:border-gray-500 transition-all duration-200 ease-in-out font-medium text-gray-900 dark:text-white";
+const labelClass =
+  "block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2.5";
+const primaryBtn =
+  "w-full cursor-pointer inline-flex items-center justify-center gap-2 py-3.5 text-base font-semibold bg-gray-900 text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-100 rounded-xl shadow-sm transition-all duration-200 ease-in-out hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100";
+const secondaryBtn =
+  "w-full cursor-pointer py-3.5 text-base font-semibold border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 ease-in-out hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100";
 
 export default function EditLeadPage() {
   const router = useRouter();
@@ -143,34 +148,35 @@ export default function EditLeadPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-900">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col font-sans text-gray-900 dark:text-white">
         <AppNavbar active="leads" onLogout={handleLogout} />
-        <main className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 w-full flex flex-col items-center justify-center min-h-[50vh]">
-          <div className="h-10 w-10 rounded-full border-2 border-gray-200 border-t-gray-900 animate-spin shrink-0" />
-          <p className="mt-4 text-sm font-medium text-gray-600">Loading lead details…</p>
+        <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 w-full flex flex-col items-center justify-center min-h-[50vh]">
+          <div className="h-10 w-10 rounded-full border-2 border-gray-200 dark:border-gray-600 border-t-gray-900 dark:border-t-gray-200 animate-spin shrink-0" />
+          <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">Loading lead details…</p>
         </main>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col font-sans text-gray-900 dark:text-white">
       <AppNavbar active="leads" onLogout={handleLogout} />
 
-      <main className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 w-full">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 w-full">
+        <div className="max-w-3xl mx-auto w-full">
         <div className="mb-8">
           <Link
             href="/leads"
-            className="text-sm font-semibold text-gray-500 hover:text-gray-900 mb-4 inline-block transition-colors cursor-pointer"
+            className="text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-4 inline-block transition-all duration-200 ease-in-out cursor-pointer"
           >
             ← Back to Leads
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Edit Lead</h1>
+          <h1 className="text-3xl sm:text-4xl font-semibold text-gray-900 dark:text-white tracking-tight">Edit Lead</h1>
         </div>
 
-        <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-10 min-h-[320px]">
+        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-2xl border border-gray-200 dark:border-gray-700 p-6 sm:p-8 min-h-[320px] transition-all duration-200 ease-in-out hover:shadow-lg">
           {error && (
-            <div className="mb-8 p-4 bg-red-50 text-red-700 rounded-xl border border-red-100 font-semibold text-sm">
+            <div className="mb-8 p-4 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 rounded-xl border border-red-100 dark:border-red-900/50 font-semibold text-sm">
               {error}
             </div>
           )}
@@ -281,15 +287,15 @@ export default function EditLeadPage() {
               />
             </div>
 
-            <div className="pt-6 sm:pt-8 border-t border-gray-100 flex flex-col gap-3">
+            <div className="pt-6 sm:pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-col gap-3">
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full cursor-pointer inline-flex items-center justify-center gap-2 py-3.5 text-base font-semibold text-white bg-black hover:bg-gray-900 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                className={primaryBtn}
               >
                 {saving ? (
                   <>
-                    <SubmitSpinner className="border-white/40 border-t-white" />
+                    <SubmitSpinner className="border-white/40 border-t-white dark:border-gray-300/50 dark:border-t-black" />
                     Loading...
                   </>
                 ) : (
@@ -300,12 +306,13 @@ export default function EditLeadPage() {
                 type="button"
                 disabled={saving}
                 onClick={() => router.push("/leads")}
-                className="w-full cursor-pointer py-3.5 text-base font-semibold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className={secondaryBtn}
               >
                 Cancel
               </button>
             </div>
           </form>
+        </div>
         </div>
       </main>
     </div>
